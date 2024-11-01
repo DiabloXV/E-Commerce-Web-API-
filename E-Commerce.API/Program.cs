@@ -28,6 +28,7 @@ namespace E_Commerce.API
 
             await InitializeDbAsync(app);
 
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
