@@ -1,0 +1,42 @@
+﻿global using Services.Abstractions;
+global using Shared;
+global using AutoMapper;
+global using Domain.Contracts;
+using Domain.Entities;
+
+namespace Services
+{
+    internal class ProductService (IUnitOfWork UnitOfWork, IMapper Mapper) : IProductService // We leave it internal because we don't want to expose the implementation to the outer layers
+    {
+        public async Task<IEnumerable<BrandResultDTO>> GetAllBrandsAsync()
+        {
+            //1. Retrieve all Brands => unit of work
+            var brands = await UnitOfWork.GetRepository<ProductBrand, int>().GetAllAsync();
+            //2. Map to Brand Result => IMapper
+            var BrandResult = Mapper.Map<IEnumerable<BrandResultDTO>>(brands);
+            //3. Return
+            return BrandResult;
+        }
+
+        public async Task<IEnumerable<ProductResultDTO>> GetAllProductsAsync()
+        {
+            var products = await UnitOfWork.GetRepository <Product, int>().GetAllAsync();
+            var productsResult = Mapper.Map <IEnumerable<ProductResultDTO>> (products);
+            return productsResult;
+        }
+
+        public async Task<IEnumerable<TypeResultDTO>> GetAllTypesAsync()
+        {
+            var types = await UnitOfWork.GetRepository<ProductType, int>().GetAllAsync();
+            var typesResult = Mapper.Map<IEnumerable<TypeResultDTO>>(types);
+            return typesResult;
+        }
+
+        public async Task <ProductResultDTO?> GetProductsByIdAsync(int Id)
+        {
+            var product = await UnitOfWork.GetRepository <Product, int>().GetAsync(Id);
+            var productResult = Mapper.Map<ProductResultDTO>(product);
+            return productResult;
+        }
+    }
+}

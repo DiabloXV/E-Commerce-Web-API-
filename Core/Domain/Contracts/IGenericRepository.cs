@@ -6,7 +6,7 @@ namespace Domain.Contracts
     {
         Task <TEntity?> GetAsync(TKey Id);
 
-        Task <IEnumerable<TEntity>> GetAllAsync(bool trackChanges);
+        Task <IEnumerable<TEntity>> GetAllAsync(bool trackChanges = false);
 
         Task AddAsync (TEntity entity);
 
