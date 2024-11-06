@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Persistence;
 using Persistence.Data;
 using Persistence.Repositories;
+using Services;
+using Services.Abstractions;
 
 namespace E_Commerce.API
 {
@@ -15,9 +17,10 @@ namespace E_Commerce.API
 
             // Add services to the container.
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers().AddApplicationPart(typeof(Presentation.AssemblyReference).Assembly);
             builder.Services.AddScoped <IDbInitializer, DbInitializer>();
             builder.Services.AddScoped <IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped <IServiceManager , ServiceManager>();  
             builder.Services.AddAutoMapper(typeof(Services.AssemblyReference).Assembly);
             builder.Services.AddDbContext <StoreContext> (options =>
             {
