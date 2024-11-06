@@ -8,7 +8,7 @@ namespace Persistence.Repositories
         private readonly StoreContext _storeContext;
         private readonly ConcurrentDictionary<string, object> _repositories; //Using Concurrent Dictionary to Keep the object that GetRepository uses safe if it was used by multiple threads
 
-        public UnitOfWork(StoreContext storeContext, Dictionary<string, object> repositories)
+        public UnitOfWork(StoreContext storeContext)
         {
             _storeContext = storeContext;
             _repositories = new();
