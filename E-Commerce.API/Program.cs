@@ -41,6 +41,7 @@ namespace E_Commerce.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            app.UseStaticFiles(); //if static files are in other place than default (wwwroot) -> new StaticFileOptions FileProvider = new PhysicalFileProvider("")
 
             app.UseHttpsRedirection();
 
