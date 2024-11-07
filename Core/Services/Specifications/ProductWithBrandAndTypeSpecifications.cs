@@ -14,11 +14,12 @@ namespace Services.Specifications
 
         public ProductWithBrandAndTypeSpecifications(ProductSpecificationsParameters parameters) :
             base(product => (!parameters.BrandId.HasValue || product.BrandId == parameters.BrandId) &&
-             (!parameters.TypeId.HasValue || product.TypeId == parameters.TypeId))
+             (!parameters.TypeId.HasValue || product.TypeId == parameters.TypeId) &&
+            (string.IsNullOrWhiteSpace(parameters.Search) || product.Name.ToLower().Contains(parameters.Search.ToLower().Trim())))
         {
             AddInclude(product => product.ProductBrand);
             AddInclude(product => product.ProductType);
-
+           
             ApplyPagination(parameters.PageIndex, parameters.PageSize);
 
             if (parameters.Sort is not null)
@@ -39,33 +40,6 @@ namespace Services.Specifications
                         break;
                 }
             }
-
-            //public ProductWithBrandAndTypeSpecifications(string? sort , int? brandId, int? typeId) : 
-            //    base(product => (!brandId.HasValue || product.BrandId == brandId.Value)&&
-            //    (!typeId.HasValue || product.TypeId == typeId.Value))
-            //{
-            //    AddInclude(product => product.ProductBrand);
-            //    AddInclude(product => product.ProductType);
-
-            //    if(!string.IsNullOrWhiteSpace(sort))
-            //    {
-            //        switch (sort.ToLower().Trim()) 
-            //        {
-            //            case "pricedesc":
-            //                SetOrderByDescending(p => p.Price); 
-            //                break;
-            //            case "priceasc":
-            //                SetOrderyBy(p => p.Price);
-            //                break;
-            //            case "namedesc":
-            //                SetOrderByDescending (p => p.Name);
-            //                break;
-            //            default:
-            //                SetOrderyBy(p => p.Name);
-            //                break;
-            //        }
-            //    }
-            //}
         }
     }
 }

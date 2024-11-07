@@ -20,6 +20,8 @@ namespace Shared
 
         private int _pageSize = DEFAULTPAGESIZE;
 
+        public string? Search { get; set; }
+
         public int PageSize
         { get => _pageSize; 
             set => _pageSize = value > MAXEPAGESIZE ? MAXEPAGESIZE : value; }
