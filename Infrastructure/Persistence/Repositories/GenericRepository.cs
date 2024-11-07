@@ -18,26 +18,32 @@ namespace Persistence.Repositories
         }
 
         public async Task AddAsync(TEntity entity) => await _storeContext.Set<TEntity>().AddAsync(entity);
-        
+
+        public async Task<int> CountAsync(Specifications<TEntity> specifications)
+        => await SpecificationEvaluator.GetQuery(_storeContext.Set<TEntity>(), specifications).CountAsync();
+
         public void Delete(TEntity entity) =>  _storeContext.Set<TEntity>().Remove(entity);
       
 
         public async Task<IEnumerable<TEntity>> GetAllAsync(bool trackChanges) => trackChanges? await _storeContext.Set<TEntity>().ToListAsync() 
             : await _storeContext.Set <TEntity>().AsNoTracking().ToListAsync();
 
-        public async Task<IEnumerable<TEntity>> GetAllAsync(Specifications<TEntity> specifications)
+        //public async Task<IEnumerable<TEntity>> GetAllAsync(Specifications<TEntity> specifications)
         
-           => await ApplySpecifications(specifications).ToListAsync();
+        //   => await ApplySpecifications(specifications).ToListAsync();
         
-        public async Task<TEntity?> GetAsync(TKey Id) => await _storeContext.Set<TEntity>().FindAsync(Id);
+        public async Task<TEntity?> GetAsync(Specifications<TEntity> specifications) => 
+            await ApplySpecifications(specifications).FirstOrDefaultAsync();
 
-        public Task<TEntity?> GetAsync(Specifications<TEntity> specifications)
-            => ApplySpecifications(specifications).FirstOrDefaultAsync();
+        public async Task<IEnumerable<TEntity>> GetAllAsync(Specifications<TEntity> specifications)
+            => await ApplySpecifications(specifications).ToListAsync();
 
         public void Update(TEntity entity)=> _storeContext.Set<TEntity>().Update(entity);
 
         //shortcut to apply any specification late
         private IQueryable<TEntity> ApplySpecifications(Specifications<TEntity> specifications) => SpecificationEvaluator.GetQuery<TEntity>(_storeContext.Set<TEntity>(), specifications);
 
+        public async Task<TEntity?> GetAsync(TKey Id) => await _storeContext.Set<TEntity>().FindAsync(Id);
+       
     }
 }
