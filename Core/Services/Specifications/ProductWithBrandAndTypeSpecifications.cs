@@ -1,6 +1,5 @@
 ﻿global using Shared;
 using System.Linq.Expressions;
-
 namespace Services.Specifications
 {
     internal class ProductWithBrandAndTypeSpecifications : Specifications<Product>
@@ -17,6 +16,11 @@ namespace Services.Specifications
             base(product => (!parameters.BrandId.HasValue || product.BrandId == parameters.BrandId) &&
              (!parameters.TypeId.HasValue || product.TypeId == parameters.TypeId))
         {
+            AddInclude(product => product.ProductBrand);
+            AddInclude(product => product.ProductType);
+
+            ApplyPagination(parameters.PageIndex, parameters.PageSize);
+
             if (parameters.Sort is not null)
             {
                 switch (parameters.Sort)
