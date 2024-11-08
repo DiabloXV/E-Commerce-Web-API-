@@ -8,6 +8,8 @@ namespace Domain.Contracts
 
         Task<TEntity?> GetAsync(Specifications<TEntity> specifications);
 
+        Task<int> CountAsync(Specifications<TEntity> specifications);
+
         Task <IEnumerable<TEntity>> GetAllAsync(bool trackChanges = false);
 
         Task<IEnumerable<TEntity>> GetAllAsync(Specifications<TEntity> specifications);

@@ -1,5 +1,5 @@
-﻿using System.Linq.Expressions;
-
+﻿global using Shared;
+using System.Linq.Expressions;
 namespace Services.Specifications
 {
     internal class ProductWithBrandAndTypeSpecifications : Specifications<Product>
@@ -11,25 +11,29 @@ namespace Services.Specifications
             AddInclude(product => product.ProductType);
         }
         //Used to get all products
-        public ProductWithBrandAndTypeSpecifications(string? sort , int? brandId, int? typeId) : 
-            base(product => (!brandId.HasValue || product.BrandId == brandId.Value)&&
-            (!typeId.HasValue || product.TypeId == typeId.Value))
+
+        public ProductWithBrandAndTypeSpecifications(ProductSpecificationsParameters parameters) :
+            base(product => (!parameters.BrandId.HasValue || product.BrandId == parameters.BrandId) &&
+             (!parameters.TypeId.HasValue || product.TypeId == parameters.TypeId) &&
+            (string.IsNullOrWhiteSpace(parameters.Search) || product.Name.ToLower().Contains(parameters.Search.ToLower().Trim())))
         {
             AddInclude(product => product.ProductBrand);
             AddInclude(product => product.ProductType);
+           
+            ApplyPagination(parameters.PageIndex, parameters.PageSize);
 
-            if(!string.IsNullOrWhiteSpace(sort))
+            if (parameters.Sort is not null)
             {
-                switch (sort.ToLower().Trim()) 
+                switch (parameters.Sort)
                 {
-                    case "pricedesc":
-                        SetOrderByDescending(p => p.Price); 
+                    case ProductSortingOptions.PriceDesc:
+                        SetOrderByDescending(p => p.Price);
                         break;
-                    case "priceasc":
+                    case ProductSortingOptions.PriceAsc:
                         SetOrderyBy(p => p.Price);
                         break;
-                    case "namedesc":
-                        SetOrderByDescending (p => p.Name);
+                    case ProductSortingOptions.NameDesc:
+                        SetOrderByDescending(p => p.Name);
                         break;
                     default:
                         SetOrderyBy(p => p.Name);
