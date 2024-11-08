@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Services.Abstractions;
 using Shared;
+using Shared.ErrorModels;
+using System.Net;
 
 namespace Presentation
 {
@@ -29,6 +31,10 @@ namespace Presentation
 
             return Ok(types);
         }
+        [ProducesResponseType(typeof(ValidationErrorResponse), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.InternalServerError)]
+        [ProducesResponseType(typeof(ValidationErrorResponse), (int)HttpStatusCode.OK)]
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductResultDTO>> GetProduct(int id)
         {
